@@ -1,0 +1,36 @@
+float g;
+
+int x = 6;
+
+int main() {
+    int z = 3;
+    return 0;
+}
+
+
+
+int funcAux(int x, int p) {
+    int a = 3;
+    int b = 4;
+    int i = 0;
+    if(a == 3){
+        a = 4;
+    }
+    return a;
+}
+
+
+int func;
+
+float aux(int x, int p);
+
+
+
+g
+x = 6
+func 
+
+
+
+
+

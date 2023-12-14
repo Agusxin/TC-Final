@@ -1,4 +1,4 @@
-// Generated from c:\Users\Agux\Desktop\DefinitivoTC\finaltc\src\main\java\finaltc\reglas.g4 by ANTLR 4.9.2
+// Generated from c:/Users/Agux/Desktop/DefinitivoTC/finaltc/src/main/java/finaltc/reglas.g4 by ANTLR 4.13.1
 
 package finaltc;
 
@@ -12,6 +12,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
  * which can be extended to create a listener which only needs to handle a subset
  * of the available methods.
  */
+@SuppressWarnings("CheckReturnValue")
 public class reglasBaseListener implements reglasListener {
 	/**
 	 * {@inheritDoc}
@@ -78,18 +79,6 @@ public class reglasBaseListener implements reglasListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLista_declaracion(reglasParser.Lista_declaracionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitLista_declaracion(reglasParser.Lista_declaracionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterTipo_de_datos(reglasParser.Tipo_de_datosContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -97,6 +86,18 @@ public class reglasBaseListener implements reglasListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitTipo_de_datos(reglasParser.Tipo_de_datosContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAsignar(reglasParser.AsignarContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAsignar(reglasParser.AsignarContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -186,6 +187,18 @@ public class reglasBaseListener implements reglasListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterF(reglasParser.FContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitF(reglasParser.FContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterLogico_comp(reglasParser.Logico_compContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -229,18 +242,6 @@ public class reglasBaseListener implements reglasListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitPos_pre_incremento(reglasParser.Pos_pre_incrementoContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterBloque_for(reglasParser.Bloque_forContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitBloque_for(reglasParser.Bloque_forContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -313,18 +314,6 @@ public class reglasBaseListener implements reglasListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDefinicion_funcion(reglasParser.Definicion_funcionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterDeclaracion_funcion(reglasParser.Declaracion_funcionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitDeclaracion_funcion(reglasParser.Declaracion_funcionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

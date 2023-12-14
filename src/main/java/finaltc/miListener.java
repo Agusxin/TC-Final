@@ -1,33 +1,29 @@
 package finaltc;
 
+import java.util.Collection;
 import java.util.LinkedList;
+import java.util.ArrayList;
 
+
+import org.antlr.v4.runtime.tree.Trees;
+import org.antlr.v4.runtime.tree.ParseTree;
+
+
+import finaltc.reglasParser.*;
 import finaltc.TablaSimbolos.*;
-import finaltc.reglasParser.AsignacionContext;
-import finaltc.reglasParser.BloqueContext;
-import finaltc.reglasParser.DeclaracionContext;
-import finaltc.reglasParser.Declaracion_funcionContext;
-import finaltc.reglasParser.Definicion_funcionContext;
-import finaltc.reglasParser.FactorContext;
-import finaltc.reglasParser.Llamada_funcionContext;
-import finaltc.reglasParser.Parametros_funcionContext;
-import finaltc.reglasParser.ProgramaContext;
-import finaltc.reglasParser.Lista_declaracionContext;
 
 public class miListener extends reglasBaseListener {
 
     private TablaSimbolos simbolTable;
-    private LinkedList<ID> functionParams;
     private boolean errorCodigo=false;
-   
+  
     public miListener() {
         simbolTable = TablaSimbolos.getInstance();
-        functionParams = new LinkedList<ID>();
     }
 
     @Override
     public void enterPrograma(ProgramaContext ctx) {
-        System.out.println("\n[Inicio del análisis de las IDs usadas y declaradas]\n");
+      System.out.println("\n[Inicio del análisis de las IDs usadas y declaradas]\n");
     }
 
     
@@ -41,91 +37,105 @@ public class miListener extends reglasBaseListener {
     public void exitDeclaracion(DeclaracionContext ctx) {
         
 
+    //  ID searchID = new ID(nombre, tipo);
+      if(this.simbolTable.searchID(ctx.ID().getText()) != null){
+               errorCodigo = true;
+               ErrorListener.printError(ctx.getStop().getLine(), "ERROR SEMANTICO: Doble declaración de --[" + ctx.tipo_de_datos().getText() + " " + ctx.ID().getText() + "]");
+      }
+
       String tipo = ctx.tipo_de_datos().getText();
       String nombre = ctx.ID().getText();
-      ID searchID = new ID(nombre, tipo);
-
-      if(this.simbolTable.searchId(searchID) != null){
-               errorCodigo = true;
-               ErrorListener.printError(ctx.getStop().getLine(), "Doble declaración de: [" + tipo + " " + nombre + "]");
-      } 
-      
-      Lista_declaracionContext verificarChilds = ctx.lista_declaracion();
-
-        if(verificarChilds.getChildCount() == 0){
-            ID id = new ID(nombre, tipo, false);
-            System.out.println(id);
+  
+      if(ctx.asignar() != null){
+             Variable id = new Variable(nombre, tipo, true);
+             simbolTable.addId(id);
+       }else{
+            Variable id = new Variable(nombre, tipo, false);
             simbolTable.addId(id);
         }
-
-        while(verificarChilds.getChildCount() != 0){
-             
-            if(verificarChilds.getChild(0).getText().equals("=")){
-                ID id = new ID(nombre, tipo, true);
-                simbolTable.addId(id);
-            }
-            if(verificarChilds.getChild(0).getText().equals(",")){
-                ID id = new ID(nombre, tipo, false);
-                simbolTable.addId(id);
-            }
-            verificarChilds = verificarChilds.lista_declaracion();
-        }
-        
+      
     }
 
     @Override
     public void exitAsignacion(AsignacionContext ctx) {
     
-        ID searchID = new ID(ctx.ID().getText(), "");
+        ID searchID = this.simbolTable.searchID(ctx.ID().getText());
 
-        if( this.simbolTable.searchId(searchID) == null ){
+        if( searchID == null ){
             errorCodigo = true;
-            ErrorListener.printError(ctx.getStop().getLine(), "Uso de ID no declarado: [" + searchID.getNombre() + "]");
+            ErrorListener.printError(ctx.getStop().getLine(), "ERROR SEMANTICO: Uso de ID no declarado --[" + searchID.getNombre() + "]");
             return;
         }
-
         searchID.setInicializada(true);
     }
 
-
+/* 
     @Override
     public void exitParametros_funcion(Parametros_funcionContext ctx) {
         if(ctx.getChildCount() != 0){
             if(ctx.ID() != null){
+                obtenerParametros(ctx, null)
+              
                 ID id = new ID(ctx.ID().getText(), ctx.tipo_de_datos().getText(), true);
+                System.out.println(id);
+                //simbolTable.addId(id);
                 this.functionParams.add(id);
+              
             }
+        }
+    }
+ */
+
+
+    private ArrayList<ID> obtenerParametros(Parametros_funcionContext ctx, ArrayList<ID> parametros){
+
+        Collection<ParseTree> param = Trees.findAllRuleNodes(ctx, reglasParser.RULE_parametros_funcion);
+        
+        if(ctx.ID() != null){
+            for(ParseTree parse: param){
+                Parametros_funcionContext pfc = (Parametros_funcionContext) parse;
+                Variable id = new Variable(pfc.ID().getText(), 
+                                           pfc.tipo_de_datos().getText(), 
+                                           true
+                                           );
+                parametros.add(id);
+            }
+            return parametros;
+        }else{
+            return null;
         }
     }
 
 
     @Override
     public void exitDefinicion_funcion(Definicion_funcionContext ctx) {
-        ID searchID = new ID(ctx.ID().getText(), ctx.tipo_de_funcion().getText());
-        ID searchedID = this.simbolTable.searchId(searchID);
-
-        if(searchedID != null){
-            Funcion funcion = (Funcion) searchedID;
-            if(funcion.getDefinida()){
+       
+        if(this.simbolTable.searchID(ctx.ID().getText()) != null){
                 errorCodigo = true;  
-                ErrorListener.printError(ctx.getStop().getLine(), "Doble definicion de función: [" + searchID.getTipo() + " " + searchID.getNombre() + "]");
+                ErrorListener.printError(ctx.getStop().getLine(), "ERROR SEMANTICO: Doble declaracion de función --[" + ctx.tipo_de_funcion().getText() + " " + ctx.ID().getText() + "]");
                 return;
-            }else{
-                funcion.setDefinida(true);
-            }
         }else{
-            LinkedList<ID> functionParamsCopy = new LinkedList<>();
+            ArrayList<ID> functionsParams = new ArrayList<>();
+           functionsParams = obtenerParametros(ctx.parametros_funcion(), functionsParams);
 
-            for(int i = 0; i < functionParams.size(); i++){
-                functionParamsCopy.add(functionParams.get(i));
+           if(functionsParams != null){
+            for(ID aux: functionsParams){
+                System.out.println(aux);
+                if( this.simbolTable.searchID(aux.getNombre()) != null){
+                        errorCodigo = true;
+                        ErrorListener.printError(ctx.getStop().getLine(), "Doble declaración de: [" + aux.getTipo() + " " + aux.getNombre() + "]");
+                }else{
+                  simbolTable.addId(aux);
+                }
             }
-
-            Funcion funcion = new Funcion(searchID.getTipo(), searchID.getNombre(), true, functionParamsCopy);
+            Funcion funcion = new Funcion(ctx.tipo_de_funcion().getText(), ctx.ID().getText(), true, functionsParams);
             this.simbolTable.addId(funcion);
-            this.functionParams.clear();
+            functionsParams.clear();
+           }
         }
     }
 
+    /* 
     @Override
     public void exitDeclaracion_funcion(Declaracion_funcionContext ctx) {
          
@@ -138,56 +148,68 @@ public class miListener extends reglasBaseListener {
             ErrorListener.printError(ctx.getStop().getLine(), "Doble definicion de función: [" + funcion.getTipo() + " " + funcion.getNombre() + "]");
             return;
         }
-
-        LinkedList<ID> functionParamsCopy = new LinkedList<>();
-
-       for(int i = 0; i < functionParams.size(); i++){
-         functionParamsCopy.add(functionParams.get(i));
-       }
-
-        Funcion funcion = new Funcion(searchID.getTipo(), searchID.getNombre(),false, functionParamsCopy);
+        ArrayList<ID> functionsParams = new ArrayList<>();
+        for(ID aux: functionsParams){
+            if( this.simbolTable.searchId(aux) != null){
+                errorCodigo = true;
+                ErrorListener.printError(ctx.getStop().getLine(), "Doble declaración de: [" + aux.getTipo() + " " + aux.getNombre() + "]");
+            }else{
+                simbolTable.addId(aux);
+            }
+        }
+        Funcion funcion = new Funcion(searchID.getTipo(), searchID.getNombre(),false, functionsParams);
         this.simbolTable.addId(funcion);
-        this.functionParams.clear();
     }
+    */
 
     @Override
     public void exitLlamada_funcion(Llamada_funcionContext ctx) {
-       ID searchID = new ID(ctx.ID().getText(), "");
-       ID searched = this.simbolTable.searchId(searchID);
-       if(searched == null){
+        System.out.println(ctx.getText());
+       ID searchID = this.simbolTable.searchID(ctx.ID().getText());
+       if(searchID == null){
         errorCodigo = true;
-        ErrorListener.printError(ctx.getStop().getLine(), "Uso de Función no declarada: [" + searchID.getNombre() + "]");
+        ErrorListener.printError(ctx.getStop().getLine(), "ERROR SEMANTICO: Uso de Función no declarada: [" + searchID.getNombre() + "]");
         return;
        }else{
-          searched.setUsado(true);
+          searchID.setUsado(true);
        }
+    }
+
+    @Override
+    public void exitIfor(IforContext ctx) {
+        if (ctx.asignacion().ID() != null){
+            ID searchId = this.simbolTable.searchID(ctx.asignacion().ID().getText());
+            if(searchId == null){
+                errorCodigo = true;
+                ErrorListener.printError(ctx.getStop().getLine(), "ERROR SEMANTICO: Identificador no declarada: [" + ctx.asignacion().ID() + "]");
+            }
+        }
     }
 
     @Override
     public void exitFactor(FactorContext ctx) {
-        
-        if(ctx.ID() != null){
-            ID searchID = new ID(ctx.ID().getText(), "");
-            ID searched = this.simbolTable.searchId(searchID);
 
-            if(searched  == null){
-                errorCodigo = true;
-                ErrorListener.printError(ctx.getStop().getLine(), "Uso de ID no declarado: [" + searchID.getNombre() + "]");
-            }else{
-               if(!searched.isInicializada()){
-                errorCodigo = true;
-                ErrorListener.printError(ctx.getStop().getLine(), "Uso de ID no inicializado: [" + searchID.getNombre() + "]");
-               }else{
-                 searched.setUsado(true);
-               }
-            }
+        if(ctx.ID() == null){
+            return;
         }
-        return;
+        ID searchID = this.simbolTable.searchID(ctx.ID().getText());
+        if(searchID  == null){
+            errorCodigo = true;
+            ErrorListener.printError(ctx.getStop().getLine(), "ERROR SEMANTICO: Uso de ID no declarado: [" + ctx.ID() + "]");
+            return;
+        }else{
+            if(!searchID.isInicializada()){
+            errorCodigo = true;
+            ErrorListener.printError(ctx.getStop().getLine(), "ERROR SEMANTICO: Uso de ID no inicializado: [" + ctx.ID() + "]");
+            return;
+            }
+            searchID.setUsado(true);
+        }
     }
 
     @Override
     public void exitPrograma(ProgramaContext ctx) {
-       System.out.println(this.simbolTable.toString());
+      System.out.println(this.simbolTable.toString());
     }
 
     public boolean isErrorCodigo() {

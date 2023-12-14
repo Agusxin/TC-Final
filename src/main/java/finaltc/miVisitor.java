@@ -3,74 +3,282 @@ package finaltc;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
-import org.antlr.runtime.tree.TreeWizard.Visitor;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.Trees;
+import org.stringtemplate.v4.ST;
+
 import finaltc.reglasParser.*;
 
 
 public class miVisitor extends reglasBaseVisitor<String> {
 
-    private int LabelCount;
-    private int TemporalCount;
+    private int labelCount;
+    private int tempCount;
     private String previousTemporal;
     private String currentTemporal;
-    private String code;
-    private boolean addTemporal;
-
+    private String result;
 
     public miVisitor(){
-        this.LabelCount = 0;
-        this.TemporalCount = 0;
+        this.labelCount = 0;
+        this.tempCount = 0;
         this.previousTemporal = "";
         this.currentTemporal = "";
-        this.code = "";
-        this.addTemporal = false;
+        this.result = "";
+    }
+
+
+    //Listo
+    @Override
+    public String visitDeclaracion(DeclaracionContext ctx) {
+
+        if(ctx.asignar() != null){
+            List<ParseTree> factor = getNodes(ctx, reglasParser.RULE_factor);
+            if(factor.size() == 1){
+                result += ctx.ID().getText() + " = " + factor.get(0).getText() + "\n";
+            }else{    
+                processExp(ctx.asignar().opal());              
+                result += ctx.ID().getText() + " = t" + (tempCount - 1) + "\n";
+            }
+        }
+        return null;
+    }
+    
+
+    @Override
+    public String visitAsignacion(AsignacionContext ctx) {
+
+        List<ParseTree> factor = getNodes(ctx, reglasParser.RULE_factor);
+
+        if(factor.size() == 1){
+            result += ctx.ID().getText() + " = " + factor.get(0).getText() + "\n";
+        }else{          
+            processExp(ctx.asignar().opal());
+            result += ctx.ID().getText() + " = t" + (tempCount - 1) + "\n"; 
+        }
+        
+        return null;
+    }
+
+
+    @Override
+    public String visitDefinicion_funcion(Definicion_funcionContext ctx){
+
+        result += String.format("funcion comienza %s\n", ctx.ID().getText());
+        visitChildren(ctx.bloque());
+        result += String.format("%s termina\n", ctx.ID().getText());
+
+        return null;
+    }
+
+    @Override
+    public String visitFinalizar_con_return(Finalizar_con_returnContext ctx){      
+        processExp(ctx.opal());
+        result += String.format("return %s\n", currentTemporal);
+        return null;
+    }
+
+    
+    @Override
+    public String visitLlamada_funcion(Llamada_funcionContext ctx){
+        if(ctx.argumentos_funcion().getChildCount() > 0){
+           List<ParseTree> arguments = getNodes(ctx,reglasParser.RULE_opal);
+           for(ParseTree a: arguments){
+              processExp(((OpalContext)a));
+              result += String.format("param %s\n", currentTemporal);
+            }
+           result += String.format("t%s = call %s, %d\n", tempCount, ctx.ID().getText(), arguments.size());
+        }else{
+            result += String.format("t%d = call %s\n", tempCount, ctx.ID().getText());
+        }
+        tempCount++;
+        return null;
+    }
+
+    @Override
+    public String visitIif(IifContext ctx) {
+        labelCount++;
+        
+        processExp(ctx.comp().opal());
+        result += "ifnot " + currentTemporal + ", goto L" + labelCount + "\n";
+        
+        if(ctx.IElse() == null){
+            visitChildren(ctx);
+        }else{
+            System.out.println("Child 4:" + ctx.getChild(4).getText());
+            visitChildren((BloqueContext)ctx.getChild(4));
+            int aux = labelCount;
+            labelCount++;
+            result += String.format("goto L%s\n", labelCount);
+            result += String.format("L%s\n", aux);
+
+
+            System.out.println(ctx.getChild(6).getText());
+            visitChildren((BloqueContext)ctx.getChild(6));
+        }
+        this.result += String.format("L%s\n", labelCount);
+        return null;
+    }
+
+
+    private void concatTemps(String operation){
+        this.result += String.format("t%d = %s %s %s \n", tempCount, previousTemporal, operation, currentTemporal);
+        this.currentTemporal = "t" + tempCount;
+        tempCount++;
+    }
+
+    @Override
+    public String visitIwhile(IwhileContext ctx) {
+        labelCount++;
+        int aux = labelCount;
+
+        result += String.format("L%s: \n", labelCount);
+        labelCount++;
+        processExp(ctx.comp().opal());
+        result += String.format("ifnot %s, goto L%s\n", currentTemporal, labelCount);
+
+        visitChildren(ctx);
+
+        result += String.format("goto L%s\n", aux);
+        result += String.format("L%s:\n", labelCount);
+
+        return null;
+    }
+
+    @Override
+    public String visitIfor(IforContext ctx) {
+        labelCount++;
+        visitAsignacion(ctx.asignacion());
+        int aux = labelCount;
+
+        result += String.format("L%s:\n", labelCount);
+        processExp(ctx.comp().opal());
+        labelCount++;
+        result += String.format("ifnot %s, goto L%s\n", currentTemporal, labelCount);
+        visitChildren(ctx.bloque());
+        result += String.format("%s\n", ctx.comp().opal().getText());
+        result += String.format("goto L%s\n",aux);
+        result += String.format("L%s:\n", labelCount);
+        return null;
+    }
+
+
+    public void getNodesWithoutOpal(ParseTree t, int index, List<ParseTree> nodes) {
+        if (t instanceof ParserRuleContext) {
+            ParserRuleContext ctx = (ParserRuleContext) t;
+            if (ctx.getRuleIndex() == index) {
+                nodes.add(t);
+            }
+        }
+        for (int i = 0; i < t.getChildCount(); i++) {
+            if (!(t.getChild(i) instanceof OpalContext)) {
+                getNodesWithoutOpal(t.getChild(i), index, nodes);
+            }
+        }
     }
 
 
     private List<ParseTree> getNodes(ParseTree ctx, int ruleIndex) {
         return new ArrayList<ParseTree>(Trees.findAllRuleNodes(ctx, ruleIndex));
     }
-/*
-    @Override
-    public String visitAsignacion(AsignacionContext ctx) {
-        List<ParseTree> factor = getNodes(ctx, reglasParser.RULE_factor);
-        if ( factor.size() == 1){
-            this.code += ctx.ID().getText() + " = " + factor.get(0).getText() + "\n";
-        }
-        return null;
-    }
-     */
 
-    @Override
-    public String visitDeclaracion(DeclaracionContext ctx) {
-        System.out.println(ctx.lista_declaracion());
-        if (ctx.lista_declaracion() != null){
-            List<ParseTree> simple = getNodes(ctx, reglasParser.RULE_lista_declaracion);
-           if (simple.size() != 0){
-             this.code += ctx.ID().getText() + simple.get(0).getText() + "\n";
-          }
+    
+
+    private void processExp(OpalContext ctx){
+        List<ParseTree> expression = new ArrayList<ParseTree>();
+        String temp;
+      
+        getNodesWithoutOpal(ctx, reglasParser.RULE_exp, expression);
+
+        
+        for(int i = 0; i < expression.size(); i++){
+            temp = currentTemporal;
+            processTerm((ExpContext) expression.get(i));
+            previousTemporal = temp;
+            if(i > 0){
+                concatTemps(expression.get(i).getParent().getChild(0).getText());
+            }
+
         }
-        return null;
+    }
+    
+    private void processTerm(ExpContext ctx){
+        List<ParseTree> ruleTerms = new ArrayList<ParseTree>();
+        String temp;
+        getNodesWithoutOpal(ctx, reglasParser.RULE_term, ruleTerms);
+        List<ParseTree> terms = new ArrayList<ParseTree>(ruleTerms);
+  
+        for(int i = 0; i < terms.size(); i++){
+            List<ParseTree> factors = new ArrayList<ParseTree>();
+            getNodesWithoutOpal(terms.get(i), reglasParser.RULE_factor, factors);
+  
+            if(factors.size() > 1){
+                temp = currentTemporal;
+                processFactors(factors);
+                previousTemporal = temp;
+                currentTemporal = "t" + (tempCount - 1);
+            }else{
+                previousTemporal = currentTemporal;
+                 
+                if(((TermContext)terms.get(i)).factor().opal() != null){
+                    result += String.format("1\n");
+                    temp = currentTemporal;
+                    processExp(((TermContext)terms.get(i)).factor().opal());
+                    previousTemporal = temp;
+                }else if(((TermContext)terms.get(i)).factor().llamada_funcion() != null){
+                    result += String.format("2\n");
+                    temp = currentTemporal;
+                    visitLlamada_funcion(((TermContext)terms.get(i)).factor().llamada_funcion());
+                    previousTemporal = temp;
+                    currentTemporal = "t" + (tempCount - 1);
+                }else{
+                    currentTemporal = factors.get(0).getText();
+                }
+            }
+
+             if(i > 0){
+                concatTemps(terms.get(i).getParent().getChild(0).getText());
+             }
+        }       
+    }
+
+    private void processFactors(List<ParseTree> factors){
+        String temp;
+        for(int i = 0; i < factors.size(); i++){
+           previousTemporal = currentTemporal;
+
+           if(((FactorContext)factors.get(i)).opal() != null){
+             temp = currentTemporal;
+             processExp(((FactorContext)factors.get(i)).opal());
+             previousTemporal = temp;
+           }else if(((FactorContext)factors.get(i)).llamada_funcion() != null){
+              temp = currentTemporal;
+              visitLlamada_funcion(((FactorContext)factors.get(i)).llamada_funcion());
+              previousTemporal = temp;
+              currentTemporal = "t" + (tempCount - 1);
+           }else{
+               previousTemporal = currentTemporal;
+               currentTemporal = factors.get(i).getText();
+           }
+             
+           if( i > 0){
+            concatTemps(factors.get(i).getParent().getChild(0).getText());
+           }
+        }
     }
 
     public void printCode(){
         System.out.println("\n=== THREE ADDRESS CODE ===");
-        System.out.println(this.code);
+        System.out.println(this.result);
         this.printCodeToFile();
     }
 
     public void printCodeToFile(){
         try{
             PrintWriter out = new PrintWriter("intermediateCode.txt");
-            out.println(this.code);
+            out.println(this.result);
             out.close();
         }catch( FileNotFoundException e){
             System.out.print("Error saving intermediate code file: " + e.getMessage());

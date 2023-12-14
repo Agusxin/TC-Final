@@ -1,18 +1,17 @@
 package finaltc.TablaSimbolos;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class Funcion extends ID {
-    private Boolean definida;
-    private LinkedList<ID> parametros;
+   // private Boolean definida;
+    private ArrayList<ID> parametros;
 
 
-    public Funcion(String tipo, String nombre,Boolean definida, LinkedList<ID> parametros) {
+    public Funcion(String tipo, String nombre,Boolean inicializada, ArrayList<ID> parametros) {
         super.setTipo(tipo);
         super.setNombre(nombre);
-        super.setInicializada(true);
+        super.setInicializada(inicializada == true);
         super.setUsado(false);
-        this.definida = definida;
         this.parametros = parametros;
     }
 
@@ -22,10 +21,11 @@ public class Funcion extends ID {
         String nombre = this.getNombre();
         Boolean inicializada = this.isInicializada();
         Boolean usada = this.isUsado();
-        LinkedList<ID> parametros = this.parametros;
+        ArrayList<ID> parametros = this.parametros;
         return "[" + tipo + " " + nombre + "]" + " Función inicializada: " + inicializada + " -Es usada: " + usada + " Tipos de sus parametros: " + parametros;
-    }
 
+    }
+/*
     public Boolean getDefinida() {
         return definida;
     }
@@ -33,4 +33,5 @@ public class Funcion extends ID {
     public void setDefinida(Boolean definida) {
         this.definida = definida;
     }
+*/
 }

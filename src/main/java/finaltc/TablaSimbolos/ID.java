@@ -1,46 +1,12 @@
 package finaltc.TablaSimbolos;
 
-public class ID {
-
+public abstract class ID {
 
     private String nombre_token;
     private String tipo_Dato;
-    private Boolean usada;
     private Boolean inicializada;
-
-    public ID() {}
-
-    public ID(String nombre, String tipo) {
-        this.nombre_token = nombre;
-        this.tipo_Dato = tipo;
-        this.usada = false;
-        this.inicializada = false;
-    }
-
-    
-    public ID(String nombre, String tipo, Boolean inicializado) {
-        this.nombre_token = nombre;
-        this.tipo_Dato= tipo;
-        this.inicializada = inicializado;
-        this.usada = false;
-    }
-
-    /* 
-    public ID(String nombre, String tipo, Boolean usada){
-        this.nombre_token = nombre;
-        this.tipo_Dato = tipo;
-        this.usada =  usada;
-        this.inicializada = false;
-    }
-    */
-    
-    public Boolean isInicializada() {
-        return inicializada;
-    }
-
-    public void setInicializada(Boolean inicializada) {
-        this.inicializada = inicializada;
-    }
+    private Boolean usada;
+ 
 
     public String getNombre() {
         return this.nombre_token;
@@ -58,6 +24,14 @@ public class ID {
         this.tipo_Dato = tipo;
     }
 
+    public Boolean isInicializada() {
+        return inicializada;
+    }
+
+    public void setInicializada(Boolean inicializada) {
+        this.inicializada = inicializada;
+    }
+
     public Boolean isUsado() {
         return this.usada;
     }
@@ -67,7 +41,26 @@ public class ID {
     }
 
 
-    @Override
+    /*
+    public ID() {}
+
+    public ID(String nombre, String tipo) {
+        this.nombre_token = nombre;
+        this.tipo_Dato = tipo;
+        this.usada = false;
+        this.inicializada = false;
+    }
+
+    
+    public ID(String nombre, String tipo, Boolean inicializado) {
+        this.nombre_token = nombre;
+        this.tipo_Dato= tipo;
+        this.inicializada = inicializado;
+        this.usada = false;
+    }
+     */
+    
+   /*    @Override
     public String toString() {
         String tipo = this.getTipo();
         String nombre = this.getNombre();
@@ -75,4 +68,6 @@ public class ID {
         Boolean usada = this.isUsado();
         return "[" + tipo + " " + nombre + "]" + " Variable inicializada: " + inicializada + " -Es usada: " + usada;    
     }
+    */
+    
 }

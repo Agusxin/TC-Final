@@ -1,4 +1,4 @@
-// Generated from c:\Users\Agux\Desktop\DefinitivoTC\finaltc\src\main\java\finaltc\reglas.g4 by ANTLR 4.9.2
+// Generated from c:/Users/Agux/Desktop/DefinitivoTC/finaltc/src/main/java/finaltc/reglas.g4 by ANTLR 4.13.1
 
 package finaltc;
 
@@ -12,6 +12,7 @@ import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
  * @param <T> The return type of the visit operation. Use {@link Void} for
  * operations with no return type.
  */
+@SuppressWarnings("CheckReturnValue")
 public class reglasBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements reglasVisitor<T> {
 	/**
 	 * {@inheritDoc}
@@ -54,14 +55,14 @@ public class reglasBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitLista_declaracion(reglasParser.Lista_declaracionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitTipo_de_datos(reglasParser.Tipo_de_datosContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitTipo_de_datos(reglasParser.Tipo_de_datosContext ctx) { return visitChildren(ctx); }
+	@Override public T visitAsignar(reglasParser.AsignarContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -117,6 +118,13 @@ public class reglasBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitF(reglasParser.FContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitLogico_comp(reglasParser.Logico_compContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
@@ -139,13 +147,6 @@ public class reglasBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitPos_pre_incremento(reglasParser.Pos_pre_incrementoContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitBloque_for(reglasParser.Bloque_forContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -188,13 +189,6 @@ public class reglasBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitDefinicion_funcion(reglasParser.Definicion_funcionContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitDeclaracion_funcion(reglasParser.Declaracion_funcionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

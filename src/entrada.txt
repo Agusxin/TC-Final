@@ -1,36 +1,35 @@
-float g;
+int b = 1;
+int y = 2;
+int z = 3;
+int acc = 4;
+int x = b + y / z + 3;
 
-int x = 6;
-
-int main() {
-    int z = 3;
-    return 0;
+if(x<0){
+    y = z + 10;
+}else{
+    y = z - 10;
+}
+   
+if(x<0){
+    y = z + 10;
+}
+ 
+while(x < 10) {
+    acc = acc + 1;
+    x = x + 1;
 }
 
-
-
-int funcAux(int x, int p) {
+int funcAux(int d, int p) {
     int a = 3;
-    int b = 4;
-    int i = 0;
-    if(a == 3){
-        a = 4;
+    if(a > b || a == b )  {
+        a = b;
     }
     return a;
 }
 
-
-int func;
-
-float aux(int x, int p);
-
-
-
-g
-x = 6
-func 
-
-
-
+int i;
+for(i = 0; i < 10; i++){
+    acc = acc + 1;
+}
 
 

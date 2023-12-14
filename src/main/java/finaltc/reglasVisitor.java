@@ -1,4 +1,4 @@
-// Generated from c:\Users\Agux\Desktop\DefinitivoTC\finaltc\src\main\java\finaltc\reglas.g4 by ANTLR 4.9.2
+// Generated from c:/Users/Agux/Desktop/DefinitivoTC/finaltc/src/main/java/finaltc/reglas.g4 by ANTLR 4.13.1
 
 package finaltc;
 
@@ -43,17 +43,17 @@ public interface reglasVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDeclaracion(reglasParser.DeclaracionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link reglasParser#lista_declaracion}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLista_declaracion(reglasParser.Lista_declaracionContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link reglasParser#tipo_de_datos}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitTipo_de_datos(reglasParser.Tipo_de_datosContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link reglasParser#asignar}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAsignar(reglasParser.AsignarContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link reglasParser#asignacion}.
 	 * @param ctx the parse tree
@@ -97,6 +97,12 @@ public interface reglasVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFactor(reglasParser.FactorContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link reglasParser#f}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitF(reglasParser.FContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link reglasParser#logico_comp}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -120,12 +126,6 @@ public interface reglasVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitPos_pre_incremento(reglasParser.Pos_pre_incrementoContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link reglasParser#bloque_for}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBloque_for(reglasParser.Bloque_forContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link reglasParser#iwhile}.
 	 * @param ctx the parse tree
@@ -162,12 +162,6 @@ public interface reglasVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitDefinicion_funcion(reglasParser.Definicion_funcionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link reglasParser#declaracion_funcion}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDeclaracion_funcion(reglasParser.Declaracion_funcionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link reglasParser#argumentos_funcion}.
 	 * @param ctx the parse tree

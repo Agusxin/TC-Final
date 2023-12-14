@@ -21,6 +21,7 @@ FLOAT : 'float' ;
 
 WHILE : 'while' ;
 IIF : 'if' ;
+IElse : 'else';
 IFOR : 'for' ;
 
 MAS : '+' ;
@@ -69,20 +70,17 @@ instruccion : declaracion PYC
             | iif
             | ifor
             | definicion_funcion
-            | declaracion_funcion
             | llamada_funcion PYC
             | finalizar_con_return PYC
             ;
 
 
 /*  INICIO DECLARACION  */
-declaracion :  tipo_de_datos ID lista_declaracion;
+declaracion :  tipo_de_datos ID
+            |  tipo_de_datos ID asignar
+            ;
             
 
-lista_declaracion: ASIG (ID | ENTERO) lista_declaracion
-                 | COMA ID lista_declaracion
-                 |
-                 ;
 
 tipo_de_datos : INT 
               | DOUBLE 
@@ -95,9 +93,9 @@ tipo_de_datos : INT
 
 /* INICIO ASIGNACION */
 
+asignar: ASIG opal;
 
-
-asignacion : ID ASIG opal ;
+asignacion : ID asignar ;
 
 opal : exp ;
 
@@ -115,10 +113,17 @@ t : MULT factor t
   |
   ;
 
-factor : ID
-       | ENTERO
-       | PARENA exp PARENC
+factor : f ID
+       | f ENTERO
+       | f PARENA opal PARENC
+       | f llamada_funcion
        ;
+
+f : MAS
+  | MENOS
+  |
+  ;
+  
 
 
 /* FIN ASIGNACION */
@@ -138,9 +143,9 @@ comparacion : MAYOR
             | DISTINTO 
             ;
 
-comp : (ID | ENTERO) logico_comp comp
-     | (ID | ENTERO) comparacion comp
-     | (ID | ENTERO)
+comp : opal logico_comp comp
+     | opal comparacion comp
+     | opal
      ;
 
   
@@ -161,16 +166,16 @@ pos_pre_incremento : ID MAS MAS
                    ;
 
 
-bloque_for : PARENA ( (ID | asignacion) PYC comp  PYC pos_pre_incremento ) PARENC ;
-
 
 iwhile : WHILE PARENA comp PARENC bloque ;
   
 
-iif : IIF PARENA comp PARENC bloque  ;
+iif : IIF PARENA comp PARENC bloque
+    | IIF PARENA comp PARENC bloque IElse bloque 
+    ;
 
 
-ifor : IFOR bloque_for bloque ;
+ifor : IFOR PARENA asignacion PYC comp PYC pos_pre_incremento PARENC bloque ;
 
 /* FIN ESTRUCTURAS DE CONTROL */
 
@@ -178,18 +183,19 @@ ifor : IFOR bloque_for bloque ;
 /* INICIO ACEPTAR FUNCIONES Y LLAMADAS DE FUNCIONES */
 
 
-parametros_funcion : tipo_de_datos ID parametros_funcion
-                    | COMA parametros_funcion
-                    |
-                    ; 
+parametros_funcion : tipo_de_datos ID 
+                   | tipo_de_datos ID COMA parametros_funcion
+                   |
+                   ; 
 
 tipo_de_funcion : VOID | tipo_de_datos ;
-                   
-definicion_funcion: tipo_de_funcion ID PARENA parametros_funcion PARENC bloque;
-declaracion_funcion: tipo_de_funcion ID PARENA parametros_funcion PARENC PYC;
 
-argumentos_funcion: (ID | ENTERO) argumentos_funcion
-                  | COMA argumentos_funcion
+
+definicion_funcion: tipo_de_funcion ID PARENA parametros_funcion PARENC bloque;
+
+
+argumentos_funcion: opal COMA argumentos_funcion
+                  | opal
                   |
                   ;
 
@@ -199,6 +205,6 @@ llamada_funcion: ID PARENA argumentos_funcion PARENC;
 
 /* FIN ACEPTAR FUNCIONES Y LLAMADAS DE FUNCIONES */
  
-finalizar_con_return : RETURN ( term | )  ;
+finalizar_con_return : RETURN ( opal | )  ;
   
  

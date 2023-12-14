@@ -1,4 +1,4 @@
-// Generated from c:\Users\Agux\Desktop\DefinitivoTC\finaltc\src\main\java\finaltc\reglas.g4 by ANTLR 4.9.2
+// Generated from c:/Users/Agux/Desktop/DefinitivoTC/finaltc/src/main/java/finaltc/reglas.g4 by ANTLR 4.13.1
 
 package finaltc;
 
@@ -60,16 +60,6 @@ public interface reglasListener extends ParseTreeListener {
 	 */
 	void exitDeclaracion(reglasParser.DeclaracionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link reglasParser#lista_declaracion}.
-	 * @param ctx the parse tree
-	 */
-	void enterLista_declaracion(reglasParser.Lista_declaracionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link reglasParser#lista_declaracion}.
-	 * @param ctx the parse tree
-	 */
-	void exitLista_declaracion(reglasParser.Lista_declaracionContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link reglasParser#tipo_de_datos}.
 	 * @param ctx the parse tree
 	 */
@@ -79,6 +69,16 @@ public interface reglasListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTipo_de_datos(reglasParser.Tipo_de_datosContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link reglasParser#asignar}.
+	 * @param ctx the parse tree
+	 */
+	void enterAsignar(reglasParser.AsignarContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link reglasParser#asignar}.
+	 * @param ctx the parse tree
+	 */
+	void exitAsignar(reglasParser.AsignarContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link reglasParser#asignacion}.
 	 * @param ctx the parse tree
@@ -150,6 +150,16 @@ public interface reglasListener extends ParseTreeListener {
 	 */
 	void exitFactor(reglasParser.FactorContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link reglasParser#f}.
+	 * @param ctx the parse tree
+	 */
+	void enterF(reglasParser.FContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link reglasParser#f}.
+	 * @param ctx the parse tree
+	 */
+	void exitF(reglasParser.FContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link reglasParser#logico_comp}.
 	 * @param ctx the parse tree
 	 */
@@ -189,16 +199,6 @@ public interface reglasListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitPos_pre_incremento(reglasParser.Pos_pre_incrementoContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link reglasParser#bloque_for}.
-	 * @param ctx the parse tree
-	 */
-	void enterBloque_for(reglasParser.Bloque_forContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link reglasParser#bloque_for}.
-	 * @param ctx the parse tree
-	 */
-	void exitBloque_for(reglasParser.Bloque_forContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link reglasParser#iwhile}.
 	 * @param ctx the parse tree
@@ -259,16 +259,6 @@ public interface reglasListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDefinicion_funcion(reglasParser.Definicion_funcionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link reglasParser#declaracion_funcion}.
-	 * @param ctx the parse tree
-	 */
-	void enterDeclaracion_funcion(reglasParser.Declaracion_funcionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link reglasParser#declaracion_funcion}.
-	 * @param ctx the parse tree
-	 */
-	void exitDeclaracion_funcion(reglasParser.Declaracion_funcionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link reglasParser#argumentos_funcion}.
 	 * @param ctx the parse tree

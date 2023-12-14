@@ -1,8 +1,44 @@
-g
-x=6
-z=3
-a=3
-b=4
-i=0
-func
+b = 1
+y = 2
+z = 3
+acc = 4
+t0 = y / z 
+t1 = b + t0 
+t2 = t1 + 3 
+x = t2
+ifnot x, goto L1
+t3 = z + 10 
+y = t3
+goto L2
+L1
+t4 = z - 10 
+y = t4
+L2
+ifnot x, goto L3
+t5 = z + 10 
+y = t5
+L3
+L4: 
+ifnot x, goto L5
+t6 = acc + 1 
+acc = t6
+t7 = x + 1 
+x = t7
+goto L4
+L5:
+funcion comienza funcAux
+a = 3
+ifnot a, goto L6
+a = b
+L6
+return a
+funcAux termina
+i = 0
+L7:
+ifnot i, goto L8
+t8 = acc + 1 
+acc = t8
+i
+goto L7
+L8:
 

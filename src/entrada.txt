@@ -1,35 +1,46 @@
-int b = 1;
-int y = 2;
-int z = 3;
-int acc = 4;
-int x = b + y / z + 3;
+int c = 5 + 2;
+int d = 3;
+int x = c;
+int t = d + 3;
 
-if(x<0){
-    y = z + 10;
-}else{
-    y = z - 10;
-}
-   
-if(x<0){
-    y = z + 10;
-}
- 
-while(x < 10) {
-    acc = acc + 1;
-    x = x + 1;
+int addition(int k, int l){
+    k = 2 + 3;
+    l = k + 1;
+    return k;
 }
 
-int funcAux(int d, int p) {
-    int a = 3;
-    if(a > b || a == b )  {
-        a = b;
-    }
+int funcAux(int m, int p) {
+    int a = m + p;
+    int b = 4;
+    int i = 0;
     return a;
 }
 
-int i;
-for(i = 0; i < 10; i++){
-    acc = acc + 1;
+
+int main() {
+    int z = 3;
+    return 0;
 }
 
 
+int s = 3/2;
+float f = 5 + 3;
+
+
+if( x != t || a == d ){
+    return 5;
+}else{
+    return 8;
+}
+
+while( x == t ){
+    int o = 5;
+    o = o + 1;
+}
+
+int n = 5;
+int j;
+for(j = 0; i < n; i++){
+    int h = 3 + 5;
+    h = h + 1;
+}

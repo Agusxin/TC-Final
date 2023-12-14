@@ -1,44 +1,58 @@
-b = 1
-y = 2
-z = 3
-acc = 4
-t0 = y / z 
-t1 = b + t0 
-t2 = t1 + 3 
-x = t2
-ifnot x, goto L1
-t3 = z + 10 
-y = t3
-goto L2
-L1
-t4 = z - 10 
-y = t4
-L2
-ifnot x, goto L3
-t5 = z + 10 
-y = t5
-L3
-L4: 
-ifnot x, goto L5
-t6 = acc + 1 
-acc = t6
-t7 = x + 1 
-x = t7
-goto L4
-L5:
+t0 = 5 + 2 
+c = t0
+d = 3
+x = c
+t1 = d + 3 
+t = t1
+funcion comienza addition
+t2 = 2 + 3 
+k = t2
+t3 = k + 1 
+l = t3
+return k
+addition termina
 funcion comienza funcAux
-a = 3
-ifnot a, goto L6
-a = b
-L6
+t4 = m + p 
+a = t4
+b = 4
+i = 0
 return a
 funcAux termina
-i = 0
-L7:
-ifnot i, goto L8
-t8 = acc + 1 
-acc = t8
-i
-goto L7
-L8:
+funcion comienza main
+z = 3
+return 0
+main termina
+t5 = 3 / 2 
+s = t5
+t6 = 5 + 3 
+f = t6
+t7 = x != t 
+t8 = a == d 
+t9 = t7 || t8 
+ifnot t9, goto L1
+return 5
+goto L2
+L1
+return 8
+L2
+L3: 
+t10 = x == t 
+ifnot t10, goto L4
+o = 5
+t11 = o + 1 
+o = t11
+goto L3
+L4:
+n = 5
+j = 0
+L5:
+t12 = i < n 
+ifnot t12, goto L6
+t13 = 3 + 5 
+h = t13
+t14 = h + 1 
+h = t14
+i++
+goto L5
+L6:
 

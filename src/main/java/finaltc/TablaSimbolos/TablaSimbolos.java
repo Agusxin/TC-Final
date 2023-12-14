@@ -55,6 +55,17 @@ public class TablaSimbolos {
         this.historialTablaSimbolos.add(context);
     }
 
+    public void addParamContext(){
+        HashMap<String, ID> context = new HashMap<String,ID>();       
+        this.tablaSimbolos.add(context);
+        this.historialTablaSimbolos.add(context);
+    }
+
+     
+    public void removeContext() {
+        this.tablaSimbolos.removeLast();
+    }
+
     public void insertFunction(ID function){
         if(this.tablaSimbolos.size() > 1){
             this.tablaSimbolos.get(this.tablaSimbolos.size()-2).put(function.getNombre(), function);
@@ -63,10 +74,7 @@ public class TablaSimbolos {
         }
     }
 
-    
-    public void removeContext() {
-        this.tablaSimbolos.removeLast();
-    }
+   
 
     
     public int getContextSize() {

@@ -37,6 +37,9 @@ MAYORIGUAL : '>=' ;
 IGUALES: '==' ;
 DISTINTO : '!=' ;
 
+INCREMENTO : '++';
+DECREMENTO: '--';
+
 
 ASIG : '=' ;
 PYC : ';' ;
@@ -44,6 +47,9 @@ COMA : ',' ;
 
 OR : '||' ;
 AND : '&&' ;
+NOT : '!';
+TRUE : 'true';
+FALSE : 'false';
 
 RETURN : 'return' ;
 
@@ -85,6 +91,7 @@ declaracion :  tipo_de_datos ID
 tipo_de_datos : INT 
               | DOUBLE 
               | FLOAT
+              | VOID
               ;
  
 
@@ -97,7 +104,35 @@ asignar: ASIG opal;
 
 asignacion : ID asignar ;
 
-opal : exp ;
+opal: exprLog
+    ;
+
+exprLog: exprOR
+       |
+       ;
+
+exprOR : and o 
+       ;
+
+o : OR and o
+  |
+  ;
+
+and : comp a
+    ;
+
+a : AND comp a
+  |
+  ;
+
+comp : exp c
+     ;
+
+c: comparacion exp
+ |
+ ;
+
+
 
 exp : term e ;
 
@@ -115,12 +150,16 @@ t : MULT factor t
 
 factor : f ID
        | f ENTERO
-       | f PARENA opal PARENC
+       | f PARENA exprLog PARENC
        | f llamada_funcion
+       | ID f
        ;
 
 f : MAS
   | MENOS
+  | NOT
+  | INCREMENTO
+  | DECREMENTO
   |
   ;
   
@@ -143,10 +182,6 @@ comparacion : MAYOR
             | DISTINTO 
             ;
 
-comp : opal logico_comp comp
-     | opal comparacion comp
-     | opal
-     ;
 
   
 //bloque_estructuras_de_control : verificador comparacion verificador bloque_estructuras_de_control
@@ -159,23 +194,17 @@ comp : opal logico_comp comp
 //                              |
 //                              ; 
 
-pos_pre_incremento : ID MAS MAS 
-                   | ID MENOS MENOS
-                   | MAS MAS ID
-                   | MENOS MENOS ID
-                   ;
 
 
-
-iwhile : WHILE PARENA comp PARENC bloque ;
+iwhile : WHILE PARENA opal PARENC bloque ;
   
 
-iif : IIF PARENA comp PARENC bloque
-    | IIF PARENA comp PARENC bloque IElse bloque 
+iif : IIF PARENA opal PARENC bloque
+    | IIF PARENA opal PARENC bloque IElse bloque 
     ;
 
 
-ifor : IFOR PARENA asignacion PYC comp PYC pos_pre_incremento PARENC bloque ;
+ifor : IFOR PARENA asignacion PYC opal PYC (asignacion | opal) PARENC bloque ;
 
 /* FIN ESTRUCTURAS DE CONTROL */
 
@@ -188,10 +217,8 @@ parametros_funcion : tipo_de_datos ID
                    |
                    ; 
 
-tipo_de_funcion : VOID | tipo_de_datos ;
 
-
-definicion_funcion: tipo_de_funcion ID PARENA parametros_funcion PARENC bloque;
+definicion_funcion: tipo_de_datos ID PARENA parametros_funcion PARENC bloque;
 
 
 argumentos_funcion: opal COMA argumentos_funcion

@@ -67,6 +67,48 @@ public interface reglasVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitOpal(reglasParser.OpalContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link reglasParser#exprLog}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExprLog(reglasParser.ExprLogContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link reglasParser#exprOR}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExprOR(reglasParser.ExprORContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link reglasParser#o}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitO(reglasParser.OContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link reglasParser#and}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAnd(reglasParser.AndContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link reglasParser#a}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitA(reglasParser.AContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link reglasParser#comp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitComp(reglasParser.CompContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link reglasParser#c}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitC(reglasParser.CContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link reglasParser#exp}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -115,18 +157,6 @@ public interface reglasVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitComparacion(reglasParser.ComparacionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link reglasParser#comp}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitComp(reglasParser.CompContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link reglasParser#pos_pre_incremento}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPos_pre_incremento(reglasParser.Pos_pre_incrementoContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link reglasParser#iwhile}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -150,12 +180,6 @@ public interface reglasVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitParametros_funcion(reglasParser.Parametros_funcionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link reglasParser#tipo_de_funcion}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTipo_de_funcion(reglasParser.Tipo_de_funcionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link reglasParser#definicion_funcion}.
 	 * @param ctx the parse tree

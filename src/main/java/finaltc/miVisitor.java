@@ -8,7 +8,6 @@ import java.util.List;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.Trees;
-import org.stringtemplate.v4.ST;
 
 import finaltc.reglasParser.*;
 
@@ -39,7 +38,7 @@ public class miVisitor extends reglasBaseVisitor<String> {
             if(factor.size() == 1){
                 result += ctx.ID().getText() + " = " + factor.get(0).getText() + "\n";
             }else{    
-                processExp(ctx.asignar().opal());              
+                processExprLog(ctx.asignar().opal().exprLog());              
                 result += ctx.ID().getText() + " = t" + (tempCount - 1) + "\n";
             }
         }
@@ -55,7 +54,7 @@ public class miVisitor extends reglasBaseVisitor<String> {
         if(factor.size() == 1){
             result += ctx.ID().getText() + " = " + factor.get(0).getText() + "\n";
         }else{          
-            processExp(ctx.asignar().opal());
+            processExprLog(ctx.asignar().opal().exprLog());
             result += ctx.ID().getText() + " = t" + (tempCount - 1) + "\n"; 
         }
         
@@ -75,7 +74,7 @@ public class miVisitor extends reglasBaseVisitor<String> {
 
     @Override
     public String visitFinalizar_con_return(Finalizar_con_returnContext ctx){      
-        processExp(ctx.opal());
+        processExprLog(ctx.opal().exprLog());
         result += String.format("return %s\n", currentTemporal);
         return null;
     }
@@ -86,7 +85,7 @@ public class miVisitor extends reglasBaseVisitor<String> {
         if(ctx.argumentos_funcion().getChildCount() > 0){
            List<ParseTree> arguments = getNodes(ctx,reglasParser.RULE_opal);
            for(ParseTree a: arguments){
-              processExp(((OpalContext)a));
+              processExprLog(((OpalContext)a).exprLog());
               result += String.format("param %s\n", currentTemporal);
             }
            result += String.format("t%s = call %s, %d\n", tempCount, ctx.ID().getText(), arguments.size());
@@ -101,13 +100,12 @@ public class miVisitor extends reglasBaseVisitor<String> {
     public String visitIif(IifContext ctx) {
         labelCount++;
         
-        processExp(ctx.comp().opal());
+        processExprLog(ctx.opal().exprLog());
         result += "ifnot " + currentTemporal + ", goto L" + labelCount + "\n";
         
         if(ctx.IElse() == null){
             visitChildren(ctx);
         }else{
-            System.out.println("Child 4:" + ctx.getChild(4).getText());
             visitChildren((BloqueContext)ctx.getChild(4));
             int aux = labelCount;
             labelCount++;
@@ -115,8 +113,7 @@ public class miVisitor extends reglasBaseVisitor<String> {
             result += String.format("L%s\n", aux);
 
 
-            System.out.println(ctx.getChild(6).getText());
-            visitChildren((BloqueContext)ctx.getChild(6));
+             visitChildren((BloqueContext)ctx.getChild(6));
         }
         this.result += String.format("L%s\n", labelCount);
         return null;
@@ -136,7 +133,7 @@ public class miVisitor extends reglasBaseVisitor<String> {
 
         result += String.format("L%s: \n", labelCount);
         labelCount++;
-        processExp(ctx.comp().opal());
+        processExprLog(ctx.opal().exprLog());
         result += String.format("ifnot %s, goto L%s\n", currentTemporal, labelCount);
 
         visitChildren(ctx);
@@ -150,15 +147,15 @@ public class miVisitor extends reglasBaseVisitor<String> {
     @Override
     public String visitIfor(IforContext ctx) {
         labelCount++;
-        visitAsignacion(ctx.asignacion());
+        visitAsignacion(ctx.asignacion(0));
         int aux = labelCount;
 
         result += String.format("L%s:\n", labelCount);
-        processExp(ctx.comp().opal());
+        processExprLog(ctx.opal(0).exprLog());
         labelCount++;
         result += String.format("ifnot %s, goto L%s\n", currentTemporal, labelCount);
         visitChildren(ctx.bloque());
-        result += String.format("%s\n", ctx.comp().opal().getText());
+        result += String.format("%s\n", ctx.opal(1).getText());
         result += String.format("goto L%s\n",aux);
         result += String.format("L%s:\n", labelCount);
         return null;
@@ -184,9 +181,66 @@ public class miVisitor extends reglasBaseVisitor<String> {
         return new ArrayList<ParseTree>(Trees.findAllRuleNodes(ctx, ruleIndex));
     }
 
+ 
+    private void processExprLog(ExprLogContext ctx){
+        List<ParseTree> expression = new ArrayList<ParseTree>();
+        String temp;
+      
+        getNodesWithoutOpal(ctx, reglasParser.RULE_exprOR, expression);
+
+        
+        for(int i = 0; i < expression.size(); i++){
+            temp = currentTemporal;
+            processAnd((ExprORContext) expression.get(i));
+            previousTemporal = temp;
+            if(i > 0){
+                concatTemps(expression.get(i).getParent().getChild(0).getText());
+            }
+
+        }
+
+    }
+
+    private void processAnd(ExprORContext ctx){
+        List<ParseTree> expression = new ArrayList<ParseTree>();
+        String temp;
+      
+        getNodesWithoutOpal(ctx, reglasParser.RULE_and, expression);
+
+        
+        for(int i = 0; i < expression.size(); i++){
+            temp = currentTemporal;
+            processComp((AndContext) expression.get(i));
+            previousTemporal = temp;
+            if(i > 0){
+                concatTemps(expression.get(i).getParent().getChild(0).getText());
+            }
+
+        }
+    }
+
+    private void processComp(AndContext ctx){
+        List<ParseTree> expression = new ArrayList<ParseTree>();
+        String temp;
+      
+        getNodesWithoutOpal(ctx, reglasParser.RULE_comp, expression);
+
+        
+        for(int i = 0; i < expression.size(); i++){
+            temp = currentTemporal;
+            processExp((CompContext) expression.get(i));
+            previousTemporal = temp;
+            if(i > 0){
+                concatTemps(expression.get(i).getParent().getChild(0).getText());
+            }
+
+        }
+
+    }
+
     
 
-    private void processExp(OpalContext ctx){
+    private void processExp(CompContext ctx){
         List<ParseTree> expression = new ArrayList<ParseTree>();
         String temp;
       
@@ -222,10 +276,10 @@ public class miVisitor extends reglasBaseVisitor<String> {
             }else{
                 previousTemporal = currentTemporal;
                  
-                if(((TermContext)terms.get(i)).factor().opal() != null){
+                if(((TermContext)terms.get(i)).factor().exprLog() != null){
                     result += String.format("1\n");
                     temp = currentTemporal;
-                    processExp(((TermContext)terms.get(i)).factor().opal());
+                    processExprLog(((TermContext)terms.get(i)).factor().exprLog());
                     previousTemporal = temp;
                 }else if(((TermContext)terms.get(i)).factor().llamada_funcion() != null){
                     result += String.format("2\n");
@@ -249,9 +303,9 @@ public class miVisitor extends reglasBaseVisitor<String> {
         for(int i = 0; i < factors.size(); i++){
            previousTemporal = currentTemporal;
 
-           if(((FactorContext)factors.get(i)).opal() != null){
+           if(((FactorContext)factors.get(i)).exprLog() != null){
              temp = currentTemporal;
-             processExp(((FactorContext)factors.get(i)).opal());
+             processExprLog(((FactorContext)factors.get(i)).exprLog());
              previousTemporal = temp;
            }else if(((FactorContext)factors.get(i)).llamada_funcion() != null){
               temp = currentTemporal;

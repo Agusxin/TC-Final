@@ -100,6 +100,76 @@ public interface reglasListener extends ParseTreeListener {
 	 */
 	void exitOpal(reglasParser.OpalContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link reglasParser#exprLog}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprLog(reglasParser.ExprLogContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link reglasParser#exprLog}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprLog(reglasParser.ExprLogContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link reglasParser#exprOR}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprOR(reglasParser.ExprORContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link reglasParser#exprOR}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprOR(reglasParser.ExprORContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link reglasParser#o}.
+	 * @param ctx the parse tree
+	 */
+	void enterO(reglasParser.OContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link reglasParser#o}.
+	 * @param ctx the parse tree
+	 */
+	void exitO(reglasParser.OContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link reglasParser#and}.
+	 * @param ctx the parse tree
+	 */
+	void enterAnd(reglasParser.AndContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link reglasParser#and}.
+	 * @param ctx the parse tree
+	 */
+	void exitAnd(reglasParser.AndContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link reglasParser#a}.
+	 * @param ctx the parse tree
+	 */
+	void enterA(reglasParser.AContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link reglasParser#a}.
+	 * @param ctx the parse tree
+	 */
+	void exitA(reglasParser.AContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link reglasParser#comp}.
+	 * @param ctx the parse tree
+	 */
+	void enterComp(reglasParser.CompContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link reglasParser#comp}.
+	 * @param ctx the parse tree
+	 */
+	void exitComp(reglasParser.CompContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link reglasParser#c}.
+	 * @param ctx the parse tree
+	 */
+	void enterC(reglasParser.CContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link reglasParser#c}.
+	 * @param ctx the parse tree
+	 */
+	void exitC(reglasParser.CContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link reglasParser#exp}.
 	 * @param ctx the parse tree
 	 */
@@ -180,26 +250,6 @@ public interface reglasListener extends ParseTreeListener {
 	 */
 	void exitComparacion(reglasParser.ComparacionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link reglasParser#comp}.
-	 * @param ctx the parse tree
-	 */
-	void enterComp(reglasParser.CompContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link reglasParser#comp}.
-	 * @param ctx the parse tree
-	 */
-	void exitComp(reglasParser.CompContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link reglasParser#pos_pre_incremento}.
-	 * @param ctx the parse tree
-	 */
-	void enterPos_pre_incremento(reglasParser.Pos_pre_incrementoContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link reglasParser#pos_pre_incremento}.
-	 * @param ctx the parse tree
-	 */
-	void exitPos_pre_incremento(reglasParser.Pos_pre_incrementoContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link reglasParser#iwhile}.
 	 * @param ctx the parse tree
 	 */
@@ -239,16 +289,6 @@ public interface reglasListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParametros_funcion(reglasParser.Parametros_funcionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link reglasParser#tipo_de_funcion}.
-	 * @param ctx the parse tree
-	 */
-	void enterTipo_de_funcion(reglasParser.Tipo_de_funcionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link reglasParser#tipo_de_funcion}.
-	 * @param ctx the parse tree
-	 */
-	void exitTipo_de_funcion(reglasParser.Tipo_de_funcionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link reglasParser#definicion_funcion}.
 	 * @param ctx the parse tree
